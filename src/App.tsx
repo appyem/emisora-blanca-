@@ -65,16 +65,14 @@ function App() {
 
   return (
     <>
-      {/* Fondo animado con blobs 3D */}
       <div className="animated-background">
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
         <div className="blob blob-3"></div>
         <div className="blob blob-4"></div>
+        <div className="blob blob-5"></div>
       </div>
-      <div className="noise-overlay"></div>
 
-      {/* Contenedor principal */}
       <div className="app-container">
         <div className="live-badge">
           <span className="live-dot"></span>
