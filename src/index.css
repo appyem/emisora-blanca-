@@ -1,8 +1,7 @@
 /* src/index.css */
 :root {
-  --bg-dark: #0f0f13;
-  --bg-gradient: radial-gradient(circle at top center, #1e1e2f 0%, #0f0f13 100%);
-  --card-bg: rgba(255, 255, 255, 0.03);
+  --bg-dark: #0a0a0f;
+  --card-bg: rgba(255, 255, 255, 0.04);
   --card-border: rgba(255, 255, 255, 0.08);
   --accent-color: #1db954;
   --accent-glow: rgba(29, 185, 84, 0.4);
@@ -27,7 +26,7 @@ html, body {
 
 body {
   font-family: var(--font-family);
-  background: var(--bg-gradient);
+  background: var(--bg-dark);
   color: var(--text-primary);
   display: flex;
   justify-content: center;
@@ -35,7 +34,102 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Contenedor principal - ocupa toda la pantalla */
+/* ===== FONDO ANIMADO CON BLOBS 3D ===== */
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: radial-gradient(ellipse at top, #1a1a2e 0%, #0a0a0f 100%);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  will-change: transform;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.blob-1 {
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #1db954, #0d7a3a);
+  top: -150px;
+  left: -150px;
+  animation: float1 18s infinite;
+}
+
+.blob-2 {
+  width: 450px;
+  height: 450px;
+  background: linear-gradient(135deg, #8b5cf6, #5b21b6);
+  top: 30%;
+  right: -120px;
+  animation: float2 22s infinite;
+}
+
+.blob-3 {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  bottom: -100px;
+  left: 20%;
+  animation: float3 20s infinite;
+}
+
+.blob-4 {
+  width: 350px;
+  height: 350px;
+  background: linear-gradient(135deg, #06b6d4, #0e7490);
+  top: 50%;
+  left: 50%;
+  animation: float4 25s infinite;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(80px, 60px) scale(1.1); }
+  66% { transform: translate(-40px, 100px) scale(0.95); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-100px, 80px) scale(1.15); }
+  66% { transform: translate(60px, -50px) scale(0.9); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(100px, -60px) scale(1.05); }
+  66% { transform: translate(-80px, -40px) scale(1.1); }
+}
+
+@keyframes float4 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  33% { transform: translate(-30%, -70%) scale(1.2); }
+  66% { transform: translate(-70%, -30%) scale(0.95); }
+}
+
+/* Capa de ruido sutil para textura */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
 .app-container {
   position: relative;
   width: 100%;
@@ -43,14 +137,15 @@ body {
   height: 100dvh;
   padding: 1.5rem 1.2rem;
   background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
   border: 1px solid var(--card-border);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  z-index: 2;
 }
 
 /* Badge de EN VIVO */
@@ -69,6 +164,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.5px;
   border: 1px solid rgba(255, 77, 77, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .live-dot {
@@ -79,7 +175,7 @@ body {
   animation: pulse-dot 1.5s infinite;
 }
 
-/* Sección superior: Logo e información */
+/* Sección superior */
 .top-section {
   flex: 1;
   display: flex;
@@ -90,7 +186,7 @@ body {
   padding-top: 2rem;
 }
 
-/* Logo / Carátula giratoria */
+/* Logo */
 .cover-art-container {
   position: relative;
   width: clamp(120px, 35vw, 160px);
@@ -108,9 +204,10 @@ body {
   height: 100%;
   border-radius: 50%;
   background: var(--accent-color);
-  filter: blur(35px);
-  opacity: 0.25;
+  filter: blur(40px);
+  opacity: 0.4;
   z-index: 0;
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 .logo {
@@ -119,8 +216,8 @@ body {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
 
@@ -128,7 +225,11 @@ body {
   animation: spin 12s linear infinite;
 }
 
-/* Información de la pista */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
 .track-info {
   width: 100%;
 }
@@ -138,6 +239,7 @@ h1 {
   font-weight: 700;
   margin-bottom: 0.4rem;
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .slogan {
@@ -146,7 +248,7 @@ h1 {
   font-weight: 400;
 }
 
-/* Ecualizador Visual */
+/* Ecualizador */
 .visualizer {
   display: flex;
   align-items: flex-end;
@@ -158,7 +260,7 @@ h1 {
 
 .bar {
   width: 4px;
-  background-color: var(--accent-color);
+  background: linear-gradient(to top, var(--accent-color), #4ade80);
   border-radius: 2px;
   height: 4px;
 }
@@ -173,7 +275,7 @@ h1 {
 .bar:nth-child(4) { animation-delay: 0.2s; }
 .bar:nth-child(5) { animation-delay: 0.4s; }
 
-/* Sección central: Botón de Play */
+/* Sección central */
 .middle-section {
   display: flex;
   flex-direction: column;
@@ -186,22 +288,22 @@ h1 {
   width: clamp(70px, 20vw, 90px);
   height: clamp(70px, 20vw, 90px);
   border-radius: 50%;
-  background: var(--accent-color);
+  background: linear-gradient(135deg, #1db954, #169c46);
   border: none;
   color: white;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 0 0 var(--accent-glow);
+  box-shadow: 0 10px 40px rgba(29, 185, 84, 0.4);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   z-index: 2;
 }
 
 .play-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px 8px var(--accent-glow);
+  transform: scale(1.08);
+  box-shadow: 0 15px 50px rgba(29, 185, 84, 0.6);
 }
 
 .play-button:active {
@@ -232,7 +334,7 @@ h1 {
   color: var(--error-color);
 }
 
-/* Sección inferior: Botón de WhatsApp */
+/* Sección inferior */
 .bottom-section {
   width: 100%;
   padding-bottom: 1rem;
@@ -252,6 +354,7 @@ h1 {
   font-weight: 600;
   font-size: clamp(0.85rem, 3vw, 1rem);
   border: 1px solid rgba(37, 211, 102, 0.2);
+  backdrop-filter: blur(10px);
   transition: all 0.2s ease;
 }
 
@@ -278,31 +381,20 @@ h1 {
 }
 
 @keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 var(--accent-glow); }
-  70% { box-shadow: 0 0 0 15px rgba(29, 185, 84, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.5); }
+  70% { box-shadow: 0 0 0 20px rgba(29, 185, 84, 0); }
   100% { box-shadow: 0 0 0 0 rgba(29, 185, 84, 0); }
 }
 
-/* Ajustes para pantallas muy pequeñas */
+/* Móviles pequeños */
 @media (max-height: 600px) {
-  .app-container {
-    padding: 1rem 1rem;
-  }
-  .top-section {
-    padding-top: 1rem;
-  }
-  .cover-art-container {
-    width: 90px;
-    height: 90px;
-    margin-bottom: 1rem;
-  }
-  .play-button {
-    width: 60px;
-    height: 60px;
-  }
+  .app-container { padding: 1rem 1rem; }
+  .top-section { padding-top: 1rem; }
+  .cover-art-container { width: 90px; height: 90px; margin-bottom: 1rem; }
+  .play-button { width: 60px; height: 60px; }
 }
 
-/* Ajustes para tablets y desktop */
+/* Desktop */
 @media (min-width: 768px) {
   .app-container {
     max-width: 420px;
